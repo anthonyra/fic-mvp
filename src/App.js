@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { component, useEffect, useState } from 'react';
 import LitJsSdk from "@lit-protocol/sdk-browser";
 
 import "./style.css";
@@ -26,14 +26,14 @@ const resourceId = {
   path: "/home.html",
   orgId: "",
   role: "",
-  extraData: "",
+  extraData: ""
 };
 
 function Loading() {
   return (
     <h1>Connecting to the Lit Protocol</h1>
   )
-}
+};
 
 function ProvisionAccess() {
   const provisionAccess = async() => {
@@ -57,7 +57,9 @@ function ProvisionAccess() {
   )
 }
 
-function RequestJwt() {
+function LitAccessControl() {
+  const [ jwt, setJwt ] = useState(localStorage.getItem('fic-basic-auth-token'));
+
   const getJwt = async() => {
     window.jwt = await litNodeClient.getSignedToken({
       accessControlConditions: accessControlConditions,
@@ -66,18 +68,25 @@ function RequestJwt() {
       resourceId: resourceId,
     });
 
-    console.log(window.jwt);
-  }
+    setJwt(window.jwt);
+    localStorage.setItem('fic-basic-auth-token', window.jwt);
+  };
 
   return (
     <>
-      <h2>Request a JWT to authenticate the user</h2>
-      <button onClick={getJwt}>Request JWT</button>
+      {jwt ? 
+        <h1>You have access!</h1>
+      :
+        <>
+          <h2>Request a JWT to authenticate the user</h2>
+          <button onClick={getJwt}>Request JWT</button>
+        </>
+      }
     </>
   )
 }
 
-function LitProtocol() {
+function ConnectToLitProtocol() {
   const [isReady, setIsReady] = useState(false);
 
   const handleReadyStatus = (event) => {
@@ -109,7 +118,7 @@ function LitProtocol() {
     return (
       <>
         <ProvisionAccess/>
-        <RequestJwt/>
+        <LitAccessControl/>
       </>
     )
   } else {
@@ -119,14 +128,12 @@ function LitProtocol() {
   }
 }
 
-class App extends Component {
-  render() {
-    return (
-      <>
-        <LitProtocol/>
-      </>
-    );
-  }
+const App = () => {
+  return (
+    <>
+       <ConnectToLitProtocol/>
+    </>
+  );
 }
 
 export default App;

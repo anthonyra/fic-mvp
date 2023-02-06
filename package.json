@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@lit-protocol/sdk-browser": "^1.2.59",
-    "cookie-parser": "^1.4.6",
-    "events": "^3.3.0",
+    "@lit-protocol/sdk-browser": "1.2.59",
+    "events": "3.3.0",
+    "lit-share-modal-v3": "^0.0.96",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
