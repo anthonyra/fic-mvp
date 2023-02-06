@@ -1,8 +1,9 @@
-import React, { component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LitJsSdk from "@lit-protocol/sdk-browser";
 
 import "./style.css";
 
+const debugOn = true;
 const chain = "ethereum";
 const tokenId = "25516554643345687609132242082772976464785590388745551945048061171381515059700";
 const contractAddress = "0x495f947276749ce646f68ac8c248420045cb7b5e";
@@ -95,11 +96,12 @@ function ConnectToLitProtocol() {
 
   const connectToLit = async() => {
     await LitJsSdk.checkAndSignAuthMessage({
-      chain: "ethereum"
+      chain: "ethereum",
+      debug: debugOn
     });
 
     if (!window.useLitPostMessageProxy) {
-      const litNodeClient = new LitJsSdk.LitNodeClient({ debug: true });
+      const litNodeClient = new LitJsSdk.LitNodeClient({ debug: debugOn });
       litNodeClient.connect();
       window.litNodeClient = litNodeClient;
     }
