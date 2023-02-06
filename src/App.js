@@ -43,7 +43,7 @@ function ProvisionAccess() {
     await litNodeClient.saveSigningCondition({
       accessControlConditions: accessControlConditions,
       chain: chain,
-      authSig: localStorage.getItem("lit-auth-signature"),
+      authSig: JSON.parse(localStorage.getItem("lit-auth-signature")),
       resourceId: resourceId,
     });
 
@@ -59,23 +59,23 @@ function ProvisionAccess() {
 }
 
 function LitAccessControl() {
-  const [ jwt, setJwt ] = useState(localStorage.getItem('fic-basic-auth-token'));
+  const [ jwt, setJwt ] = useState();
   const [ updated, setUpdated ] = useState(Date.now());
 
-  console.log(jwt);
+  const localJwt = localStorage.getItem('fic-basic-auth-token');
 
-  if (!jwt) {
-    console.log("no jwt");
+  if (localJwt != "null" || localJwt) {
+    const { verified, header, payload } = LitJsSdk.verifyJwt({ localJwt });
   }
 
   const checkAccess = async() => {
     window.jwt = await litNodeClient.getSignedToken({
       accessControlConditions: accessControlConditions,
       chain: chain,
-      authSig: localStorage.getItem("lit-auth-signature"),
+      authSig: JSON.parse(localStorage.getItem("lit-auth-signature")),
       resourceId: resourceId,
     });
-
+   
     setJwt(window.jwt);
     localStorage.setItem('fic-basic-auth-token', window.jwt);
   };
