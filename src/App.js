@@ -60,6 +60,21 @@ function ProvisionAccess() {
 
 function LitAccessControl() {
   const [ jwt, setJwt ] = useState(localStorage.getItem('fic-basic-auth-token'));
+  const [ updated, setUpdated ] = useState(Date.now());
+
+  const refresh = () => {
+    setUpdated(Date.now());
+    getJwt();
+  }
+
+  useEffect (() => {
+    getJwt();
+    window.updated = setInterval(() => refresh(), 60 * 1000);
+
+    return () => {
+      clearInterval(window.updated);
+    };
+  }, []);
 
   const getJwt = async() => {
     window.jwt = await litNodeClient.getSignedToken({
@@ -75,13 +90,13 @@ function LitAccessControl() {
 
   return (
     <>
-      {jwt ? 
-        <h1>You have access!</h1>
-      :
+      {jwt ?
         <>
-          <h2>Request a JWT to authenticate the user</h2>
-          <button onClick={getJwt}>Request JWT</button>
+          <h1>You have access!</h1>
+          <p>Last checked: {new Date(updated).toLocaleTimeString()}</p>
         </>
+      :
+        <h2>Missing NFT for access!</h2>
       }
     </>
   )
