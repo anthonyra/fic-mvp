@@ -62,11 +62,13 @@ function LitAccessControl() {
   const [ jwt, setJwt ] = useState();
   const [ updated, setUpdated ] = useState(Date.now());
 
-  const localJwt = localStorage.getItem('fic-basic-auth-token');
+  useEffect (() => {
+    const refreshTimer = setInterval(() => setUpdated(Date.now()), 5 * 60 * 1000);
 
-  if (localJwt != "null" || localJwt) {
-    const { verified, header, payload } = LitJsSdk.verifyJwt({ localJwt });
-  }
+    return () => {
+      clearInterval(refreshTimer);
+    };
+  }, []);
 
   const checkAccess = async() => {
     window.jwt = await litNodeClient.getSignedToken({
@@ -80,17 +82,14 @@ function LitAccessControl() {
     localStorage.setItem('fic-basic-auth-token', window.jwt);
   };
 
-  const refresh = () => {
-    setUpdated(Date.now());
+  try {
+    const { payload } = LitJsSdk.verifyJwt({ jwt });
+    if (Date.now() > (payload.exp * 1000)) {
+      checkAccess();
+    }
+  } catch {
+    checkAccess();
   }
-
-  useEffect (() => {
-    const refreshTimer = setInterval(() => refresh(), 5 * 60 * 1000);
-
-    return () => {
-      clearInterval(refreshTimer);
-    };
-  }, []);
 
   return (
     <>
