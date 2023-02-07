@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ConnectToLitProtocol } from "./lit.js";
+import React from 'react';
+import { ConnectToLitProtocol } from "./lit";
 
 import "./style.css";
 
