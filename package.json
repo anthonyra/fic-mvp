@@ -5,7 +5,6 @@
   "typings": "dist/index.d.ts",
   "dependencies": {
     "@lit-protocol/constants": "^2.1.32",
-    "@lit-protocol/lit-node-client": "^2.1.5",
     "@lit-protocol/sdk-browser": "^1.2.59",
     "events": "3.3.0",
     "react": "18.2.0",
